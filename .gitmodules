@@ -1,0 +1,6 @@
+[submodule "auto_LiRPA"]
+	path = auto_LiRPA
+	url = https://github.com/Verified-Intelligence/auto_LiRPA.git
+[submodule "nn_robustness_analysis"]
+	path = nn_robustness_analysis
+	url = https://github.com/mit-acl/nn_robustness_analysis.git
