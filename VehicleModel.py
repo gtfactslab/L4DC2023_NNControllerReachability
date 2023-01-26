@@ -92,10 +92,13 @@ if __name__ == '__main__' :
     NUM_ICS = 100
     t_step = 0.01
 
-    # control = VehicleMPCController()
-    nn = VehicleNeuralNetwork(file='twoobs-nost', device='cpu')
-    st = VehicleStateTransformation()
-    control = NeuralNetworkControl(nn)
+    if METHOD == 'mpc' :
+        control = VehicleMPCController()
+    elif METHOD == 'nn' :
+        nn = VehicleNeuralNetwork(file='twoobs-nost', device='cpu')
+        # st = VehicleStateTransformation()
+        control = NeuralNetworkControl(nn)
+
     model = VehicleModel(control)
 
     t_span = [0,model.u_step*problem_horizon]
