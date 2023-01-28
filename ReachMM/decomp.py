@@ -1,4 +1,3 @@
-import numpy as np
 from numpy import sin, cos, abs, pi, sign
 
 def d_sin(x, xhat) :
@@ -45,3 +44,10 @@ def d_b1b2(b, bhat) :
     #     return min(values)
     # else :
     #     return max(values)
+
+def d_x2(x, xhat) :
+    if x >= 0 and x >= -xhat :
+        return x**2
+    elif xhat <= 0 and x <= -xhat :
+        return xhat**2
+    return 0

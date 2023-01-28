@@ -1,22 +1,47 @@
 # Interval Reachability of Nonlinear Dynamical Systems with Neural Network Controllers
 
-This repository has migrated. Please see [ReachMM](https://github.com/gtfactslab/ReachMM/tree/main) for detailed instructions on how to reproduce figures from the paper.
-
-<!-- This repository is associated with the manuscript "Interval Reachability of Nonlinear Dynamical Systems with Neural Network Controllers" submitted to L4DC 2023.  -->
-<!-- 
-## Final Manuscript
-
+## Final Manuscript with Proofs
 The folder "Final_Manuscript_with_Proofs" contains the final version of our paper with the proof of all the results. 
 
-## Code
-
-To recreate the figures from the paper, run the following script
+## Clone the Repo and its Submodules
 ```
-python experiments.py --model MODEL --runtime_N 10
+git clone --recurse-submodules https://github.com/gtfactslab/L4DC2023_NNControllerReachability.git
+cd L4DC2023_NNControllerReachability
 ```
-replacing `MODEL` with `vehicle` or `quadrotor`.
 
-More information about how to properly setup a conda environment to interface correctly with the included submodules is coming soon. -->
+## Installing ReachMM into a Conda Environment
+```
+conda create -n ReachMM python=3.10
+conda activate ReachMM
+```
+Install Pytorch according to [https://pytorch.org/](https://pytorch.org/). If you're using CUDA, check to make sure your CUDA version matches your nvidia driver with `nvidia-smi`.
 
-<!-- ### Submodules
-Note: the submodule `nn_robustness_analysis` is used for comparison with  -->
+Install `auto_LiRPA` (information taken from [https://github.com/Verified-Intelligence/auto_LiRPA](https://github.com/Verified-Intelligence/auto_LiRPA)).
+```
+cd auto_LiRPA
+python setup.py install
+```
+If you want their native CUDA modules (CUDA toolkit required),
+```
+python auto_LiRPA/cuda_utils.py install
+```
+
+Step back into the root folder and install the ReachMM package and its dependencies.
+```
+cd ..
+pip install -e .
+```
+
+## Reproducing Figures from L4DC 2023 Submission
+
+The extended version with proofs is available on [arXiv](https://arxiv.org/abs/2301.07912).
+
+To reproduce the figures from the paper, run the following, where `runtime_N` specifies the number of runs to average over. This can take a while for large values of N.
+```
+cd examples/vehicle
+python vehicle.py --runtime_N 1
+```
+```
+cd examples/quadrotor
+python quadrotor.py --runtime_N 1
+```

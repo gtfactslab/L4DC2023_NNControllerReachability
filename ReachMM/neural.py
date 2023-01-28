@@ -1,13 +1,13 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from ControlFunctions import *
+from ReachMM.control import *
 from auto_LiRPA import BoundedModule, BoundedTensor, PerturbationLpNorm
 from collections import defaultdict
 
 class NeuralNetworkControl (ControlFunction) :
-    def __init__(self, nn:nn.Module, st=None, device='cpu'):
-        super().__init__(u_len=nn[-1].out_features)
+    def __init__(self, nn:nn.Module, st=None, device='cpu', u_len=None):
+        super().__init__(u_len=nn[-1].out_features if u_len is None else u_len)
         self.nn = nn
         self.st = st
         self.device = device
@@ -21,9 +21,10 @@ class NeuralNetworkControl (ControlFunction) :
         return u
 
 class NeuralNetworkControlIF (ControlInclusionFunction) :
-    def __init__(self, nn, st=None, method='CROWN', mode='hybrid', bound_opts=None, device='cpu', verbose=False, custom_ops=None, **kwargs):
-        super().__init__(u_len=nn[-1].out_features,mode=mode)
-        self.global_input = torch.zeros([1,nn[0].in_features], dtype=torch.float32)
+    def __init__(self, nn, st=None, method='CROWN', mode='hybrid', bound_opts=None, device='cpu', x_len=None, u_len=None, verbose=False, custom_ops=None, **kwargs):
+        super().__init__(u_len=nn[-1].out_features if u_len is None else u_len,mode=mode)
+        self.x_len = nn[0].in_features if x_len is None else x_len
+        self.global_input = torch.zeros([1,self.x_len], dtype=torch.float32)
         self.st = st
         self.bnn = BoundedModule(nn, self.global_input, bound_opts, device, verbose, custom_ops)
         # self.global_input = global_input
@@ -53,11 +54,11 @@ class NeuralNetworkControlIF (ControlInclusionFunction) :
             for i in range(h) :
                 flat_x_L = x_L.reshape(-1)
                 flat_x_U = x_U.reshape(-1)
-                if flat_x_U[i] < flat_x_L[i] :
-                    print(f'swapping {i}')
-                    temp = np.copy(flat_x_L[i])
-                    flat_x_L[i] = flat_x_U[i]
-                    flat_x_U[i] = temp
+                # if flat_x_U[i] < flat_x_L[i] :
+                #     print(f'swapping {i}')
+                #     temp = np.copy(flat_x_L[i])
+                #     flat_x_L[i] = flat_x_U[i]
+                #     flat_x_U[i] = temp
         elif to == 'torch' :
             x_L = torch.tensor(x_xh[:h].reshape(1,-1), dtype=torch.float32)
             x_U = torch.tensor(x_xh[h:].reshape(1,-1), dtype=torch.float32)
@@ -67,11 +68,11 @@ class NeuralNetworkControlIF (ControlInclusionFunction) :
             for i in range(h) :
                 flat_x_L = x_L.reshape(-1)
                 flat_x_U = x_U.reshape(-1)
-                if flat_x_U[i] < flat_x_L[i] :
-                    print(f'swapping {i}')
-                    temp = torch.clone(flat_x_L[i])
-                    flat_x_L[i] = flat_x_U[i]
-                    flat_x_U[i] = temp
+                # if flat_x_U[i] < flat_x_L[i] :
+                #     print(f'swapping {i}')
+                #     temp = torch.clone(flat_x_L[i])
+                #     flat_x_L[i] = flat_x_U[i]
+                #     flat_x_U[i] = temp
         return h, x_L, x_U
 
 

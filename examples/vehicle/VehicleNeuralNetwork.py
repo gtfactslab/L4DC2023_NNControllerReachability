@@ -3,10 +3,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
-from ControlFunctions import ControlFunction
-from VehicleUtils import file_to_numpy
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+from ReachMM import ControlFunction
+from VehicleUtils import file_to_numpy
 
 # For training purposes only, run this file to train.
 MODELNAME = 'twoobs'
@@ -49,7 +49,7 @@ class VehicleNeuralNetwork (nn.Module) :
         if file != None :
             loadpath = 'models/' + file + '.pt'
             print(f'Loading model from {loadpath}')
-            self.load_state_dict(torch.load(loadpath))
+            self.load_state_dict(torch.load(loadpath, map_location=device))
         self.device = device
         # self.dummy_input = torch.tensor([[0,0,0,0,0]], dtype=torch.float64).to(device)
         self.to(self.device)

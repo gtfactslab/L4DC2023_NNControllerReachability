@@ -1,10 +1,9 @@
 import numpy as np
 from scipy.integrate import solve_ivp
 from tqdm import tqdm
-from ReachableSet import *
+from ReachMM.reach import *
 from time import time
 from torch.multiprocessing import Pool
-from functools import partial
 
 class MixedMonotoneModel :
     def __init__ (self, control=None, control_if=None, u_step=0.1) :

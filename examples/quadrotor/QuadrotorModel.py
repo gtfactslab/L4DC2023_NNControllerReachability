@@ -1,5 +1,5 @@
 import numpy as np
-from MixedMonotoneModel import MixedMonotoneModel
+from ReachMM import MixedMonotoneModel
 
 '''
 x = [
